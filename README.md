@@ -8,7 +8,7 @@ Original code by Krzysztof Białek https://github.com/kbialek/deye-inverter-mqtt
 Original code tested with:
 * [Deye SUN-4K-G05](https://www.deyeinverter.com/product/three-phase-string-inverter/sun4-5-6-7-8-10kg03.html) and Logger S/N 23xxxxxxxx
 * [Deye SUN1300G3](https://www.deyeinverter.com/product/microinverter-1/sun13002000g3eu230.html) and Logger S/N 41xxxxxxxx
-* [Deye SUN600G3](https://www.deyeinverter.com/product/microinverter-1/sun600-800-1000g3eu230-single-phase-4-mppt-microinverter-rapid-shutdown.html) and Device S/N 41xxxxxxxx
+* [Deye SUN600G3](https://www.deyeinverter.com/product/microinverter-1/sun600-800-1000g3eu230-single-phase-4-mppt-microinverter-rapid-shutdown.html) and Logger S/N 41xxxxxxxx
 
 This Code tested with Deye SUN600G3-EU-230 Microinverter (Firmware: MW3_16U_5406_1.53)
 and MQTT service (FHEM w. builtin MQTT Server)
@@ -103,14 +103,14 @@ By using this tool you accept this risk and you take full responsiblity for the 
 
 * To read register value execute:
     ```
-    edit mp_deye_cli.py as required. use 'r' in     args=['r', '86']		# Output active power 0x56=86(dec): unit: 0.1W
+    edit mp_deye_cli.py as required. use 'r' in     args=['r', '86'] # Output active power 0x56=86(dec): unit: 0.1W
     Run in Thonny.
     ```
     where `<reg_address>` is register address (decimal)
 
 * To write register value execute:
     ```
-    edit mp_deye_cli.py as required. use 'r' in     args=['w', '<reg_addres>', '<reg_value>']
+    edit mp_deye_cli.py as required. use 'w' in     args=['w', '<reg_addres>', '<reg_value>']
     Think before you act. Do not brick your inverter.
     Run in Thonny.
     ```
