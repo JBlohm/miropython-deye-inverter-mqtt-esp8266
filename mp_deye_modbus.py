@@ -112,6 +112,9 @@ class DeyeModbus:
         if not frame:
             if self.log_level <= 40: print(f"ERROR: No response frame")
             return None
+        elif len(frame) == 29:
+            self.__parse_response_error_code(frame)
+            return None
         elif len(frame) < (29 + 4):
             if self.log_level <= 40: print(f"ERROR: Response frame is too short")
             return None
@@ -173,4 +176,14 @@ class DeyeModbus:
             if self.log_level <= 40: print(f"Returned address does not match sent value.")
             return False
         return True
+
+    def __parse_response_error_code(self, frame):
+        error_frame = frame[25:-2]
+        error_code = error_frame[0]
+        if error_code == 0x05:
+            if self.log_level <= 40: print(f"Modbus device address does not match.")
+        elif error_code == 0x06:
+            if self.log_level <= 40: print(f"Logger Serial Number does not match. Check your configuration file.")
+        else:
+            if self.log_level <= 40: print("Unknown response error code. Error frame: %s", error_frame.hex())
 

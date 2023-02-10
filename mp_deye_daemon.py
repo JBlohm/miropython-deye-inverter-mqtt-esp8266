@@ -66,6 +66,14 @@ class DeyeDaemon():
             if self.log_level <= 30: print(f"WARN: Cannot read from Inverter (do_task)")
             
 
+def os_mem_free():
+    m_free = gc.mem_free()
+    m_alloc = gc.mem_alloc()
+    m_total = m_free + m_alloc
+    m_pct = '{0:.2f}%'.format(m_free/m_total*100)
+    return ('Total:{0} Free:{1} ({2})'.format(m_total,m_free,m_pct))
+  
+
 def main():
 
     # Disable AP_IF (which is active per default)
@@ -88,6 +96,7 @@ def main():
     while True:
         daemon.do_task()
         gc.collect()
+        if config.log_level <= 20: print(f"INFO: Memory: ", os_mem_free())
         time.sleep(config.data_read_inverval)
 
 
