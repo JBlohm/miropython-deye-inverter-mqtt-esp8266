@@ -16,16 +16,14 @@
 # under the License.
 
 import socket
-import logging
 import ubinascii
 
 from mp_deye_config import DeyeConfig
 
-
 class DeyeConnector:
 
     def __init__(self, config: DeyeConfig):
-        self.__log = logging.getLogger(DeyeConnector.__name__)
+        self.log_level = config.log_level
         self.config = config.logger
 
     def send_request(self, req_frame):
@@ -35,14 +33,15 @@ class DeyeConnector:
                 client_socket = socket.socket(family, socktype, proto)
                 client_socket.settimeout(10)
                 client_socket.connect(sockadress)
-            except: #socket.error as msg:
-                self.__log.warn("Could not open socket on IP %s", self.config.ip_address)
+            except: 
+                if self.log_level <= 30: print("WARN: Could not open socket on IP %s", self.config.ip_address)
+                client_socket.close()
                 return
 
-            self.__log.warn("Request frame: %s", ubinascii.hexlify(req_frame))
+            if self.log_level <= 10: print(f"DEBUG: Request frame: ", ubinascii.hexlify(req_frame))
             client_socket.sendall(req_frame)
 
-            attempts = 10 # was 5
+            attempts = 5
             while (attempts > 0):
                 attempts = attempts - 1
                 try:
@@ -50,10 +49,13 @@ class DeyeConnector:
                     try:
                         data
                     except:
-                        self.__log.warn("No data received")
-                    self.__log.warn("Response frame: %s", ubinascii.hexlify(data))
+                        if self.log_level <= 30: print(f"WARN: No data received")
+                    if self.log_level <= 10: print(f"DEBUG: Response frame: ", ubinascii.hexlify(data))
+                    client_socket.close()
                     return data
                 except:
-                    self.__log.warn("Connection timeout/error (send_request)")
+                    if self.log_level <= 30: print(f"WARN: Connection timeout/error (send_request)")
 
+        client_socket.close()
+        
         return bytearray()

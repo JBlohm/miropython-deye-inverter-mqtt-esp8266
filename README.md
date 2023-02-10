@@ -70,18 +70,16 @@ Additional groups may be added in the future.
 
 ## Installation
 1. Adapt mp_deye_config.py to your needs
-2. Copy all files to ESP8266 chip filesystem
-3. Adapt mp_deye_cli.py to your WLAN for testing single registers. Do some tests. (Use Thonny or similar for that)
-4. Adapt mp_deye_daemon.py to your WLAN
-5. Run mp_deye_daemon.py in Thonny. If that works, goto step 5.
-6. rename mp_deye_daemon.py to main.py
-7. Reboot ESP8266
+2. Copy all files except main.py to ESP8266 chip filesystem
+3. Run mp_deye_daemon.py or mp_deye_cli.py in Thonny. If that works, goto next step.
+4. Copy the main.py file to the ESP8266 chip filesystem
+5. Reboot ESP8266
 
 ## Configuration
 All configuration options are controlled through environment variables.
 WLAN is controlled directly within mp_deye_daemon.py and mp_deye_cli.py
 
-* `LOG_LEVEL` - application log level, can be any of `DEBUG`, `INFO`, `WARN`, `ERROR`
+* `LOG_LEVEL` - application log level, can be any of `DEBUG`, `INFO`, `WARN`, `ERROR`, `NOTSET`
 * `DEYE_DATA_READ_INTERVAL` - interval between subsequent data reads, in seconds, defaults to 60
 * `DEYE_METRIC_GROUPS` - a comma delimited set of:
     * `string` - set when connecting to a string inverter
@@ -94,6 +92,8 @@ WLAN is controlled directly within mp_deye_daemon.py and mp_deye_cli.py
 * `MQTT_USERNAME`
 * `MQTT_PASSWORD`
 * `MQTT_TOPIC_PREFIX` - mqtt topic prefix used for all inverter metrics
+* `WIFI_SSID`
+* `WIFI_PASSWORD`
 
 ## Reading and writing raw register values
 The tool allows reading and writing raw register values directly in the terminal.

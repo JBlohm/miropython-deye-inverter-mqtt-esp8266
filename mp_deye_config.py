@@ -27,7 +27,17 @@ MQTT_USERNAME='user'
 MQTT_PASSWORD='password'
 MQTT_TOPIC_PREFIX='deye'
 
-LOG_LEVEL='DEBUG'
+WIFI_SSID = 'your-ssid'
+WIFI_PASSWORD = 'your-password'
+
+CRITICAL = 50
+ERROR    = 40
+WARNING  = 30
+INFO     = 20
+DEBUG    = 10
+NOTSET   = 0
+
+LOG_LEVEL=INFO
 DEYE_DATA_READ_INTERVAL=60
 DEYE_METRIC_GROUPS={'micro'}
 
@@ -74,12 +84,16 @@ class DeyeLoggerConfig():
 
 class DeyeConfig():
     def __init__(self, logger_config: DeyeLoggerConfig, mqtt: DeyeMqttConfig,
-                 log_level='INFO',
+                 log_level=INFO,
+                 wifi_ssid='',
+                 wifi_pwd='',
                  data_read_inverval=60,
                  metric_groups=[]):
         self.logger = logger_config
         self.mqtt = mqtt
         self.log_level = log_level
+        self.wifi_ssid=WIFI_SSID
+        self.wifi_pwd=WIFI_PASSWORD
         self.data_read_inverval = data_read_inverval
         self.metric_groups = metric_groups
 

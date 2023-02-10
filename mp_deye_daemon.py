@@ -15,11 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import logging
 import sys
 import time
 import network
-import esp
+import gc
 
 from mp_deye_config import DeyeConfig
 from mp_deye_connector import DeyeConnector
@@ -32,20 +31,23 @@ from mp_deye_observation import Observation
 class DeyeDaemon():
     
     def __init__(self, config: DeyeConfig):
-        self.__log = logging.getLogger(DeyeDaemon.__name__)
         self.__config = config
+        self.log_level = config.log_level
         self.mqtt_client = DeyeMqttClient(config)
         connector = DeyeConnector(config)
         self.modbus = DeyeModbus(config, connector)
         self.sensors = [s for s in sensor_list if s.in_any_group(self.__config.metric_groups)]
 
     def do_task(self):
-        self.__log.info("Reading start")
+        if self.log_level <= 20: print(f"INFO: Reading start")
         try:
             
             regs = self.modbus.read_registers(0x3c, 0x4f)
+            gc.collect()
             regs.update(self.modbus.read_registers(0x50, 0x5f))
+            gc.collect()
             regs.update(self.modbus.read_registers(0x6d, 0x74))
+            gc.collect()
 
             timestamp = time.localtime()
             observations = []
@@ -54,30 +56,17 @@ class DeyeDaemon():
                 if value is not None:
                     observation = Observation(sensor, timestamp, value)
                     observations.append(observation)
-                    self.__log.debug(f'{observation.sensor.name}: {observation.value_as_str()}')
+                    if self.log_level <= 10: print(f"DEBUG: {observation.sensor.name}: {observation.value_as_str()}")
 
             self.mqtt_client.publish_observations(observations)
-            self.__log.info("Reading completed")
+            gc.collect()
+            if self.log_level <= 20: print(f"INFO: Reading completed")
 
         except:
-            self.__log.warn('Cannot read from Inverter (do_task)')
+            if self.log_level <= 30: print(f"WARN: Cannot read from Inverter (do_task)")
             
 
 def main():
-
-    # WLAN
-    ssid = 'your_wlan_ssid'
-    password = 'your_wlan_password'
-    
-    # Activate WLAN Connection
-    station = network.WLAN(network.STA_IF)
-    station.active(True)
-    station.connect(ssid, password)
-
-    while station.isconnected() == False:
-      pass
-
-    print('WLAN Connection successful')
 
     # Disable AP_IF (which is active per default)
     ap_if = network.WLAN(network.AP_IF)
@@ -85,8 +74,20 @@ def main():
     
     config = DeyeConfig.from_env()
     daemon = DeyeDaemon(config)
+    
+    # Activate WLAN Connection
+    station = network.WLAN(network.STA_IF)
+    station.active(True)
+    station.connect(config.wifi_ssid, config.wifi_pwd)
+
+    while station.isconnected() == False:
+      pass
+    
+    if config.log_level <= 20: print(f"INFO: WLAN Connection successful")
+    
     while True:
         daemon.do_task()
+        gc.collect()
         time.sleep(config.data_read_inverval)
 
 
