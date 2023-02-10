@@ -136,12 +136,12 @@ class DeyeModbus:
         registers = {}
         expected_frame_data_len = 2 + 1 + reg_count * 2
         if not frame or len(frame) < expected_frame_data_len + 2: # 2 bytes for crc
-            if self.log_level <= 40: print(f"Modbus frame is too short or empty")
+            if self.log_level <= 40: print(f"ERROR: Modbus frame is too short or empty")
             return registers
         actual_crc = int.from_bytes(frame[expected_frame_data_len:expected_frame_data_len+2], 'little')
         expected_crc = int.from_bytes(ubinascii.unhexlify(crc16(frame[0:expected_frame_data_len])), 'big')
         if actual_crc != expected_crc:
-            if self.log_level <= 40: print("Modbus frame crc is not valid. Expected {:04x}, got {:04x}".format(
+            if self.log_level <= 40: print("ERROR: Modbus frame crc is not valid. Expected {:04x}, got {:04x}".format(
                 expected_crc, actual_crc))
             return registers
         a = 0
@@ -159,21 +159,21 @@ class DeyeModbus:
         expected_frame_data_len = 6
         expected_frame_len = 6 + 2 # 2 bytes for crc
         if not frame:
-            if self.log_level <= 40: print(f"Modbus response frame is empty")
+            if self.log_level <= 40: print(f"ERROR: Modbus response frame is empty")
             return False
         elif len(frame) != expected_frame_len: 
-            if self.log_level <= 40: print(f"Wrong response frame length. Expected at least {expected_frame_len} bytes, got {len(frame)}")
+            if self.log_level <= 40: print(f"ERROR: Wrong response frame length. Expected at least {expected_frame_len} bytes, got {len(frame)}")
             return False
         actual_crc = int.from_bytes(frame[expected_frame_data_len:expected_frame_data_len+2], 'little')
         expected_crc = int.from_bytes(ubinascii.unhexlify(crc16(frame[0:expected_frame_data_len])), 'big')
         if actual_crc != expected_crc:
-            if self.log_level <= 40: print("Modbus frame crc is not valid. Expected {:04x}, got {:04x}".format(
+            if self.log_level <= 40: print("ERROR: Modbus frame crc is not valid. Expected {:04x}, got {:04x}".format(
                 expected_crc, actual_crc))
             return False
         returned_address = int.from_bytes(frame[2:4], 'big')
         returned_count = int.from_bytes(frame[4:6], 'big')
         if returned_address != reg_address or returned_count != 1:
-            if self.log_level <= 40: print(f"Returned address does not match sent value.")
+            if self.log_level <= 40: print(f"ERROR: Returned address does not match sent value.")
             return False
         return True
 
@@ -181,9 +181,9 @@ class DeyeModbus:
         error_frame = frame[25:-2]
         error_code = error_frame[0]
         if error_code == 0x05:
-            if self.log_level <= 40: print(f"Modbus device address does not match.")
+            if self.log_level <= 40: print(f"ERROR: Modbus device address does not match.")
         elif error_code == 0x06:
-            if self.log_level <= 40: print(f"Logger Serial Number does not match. Check your configuration file.")
+            if self.log_level <= 40: print(f"ERROR: Logger Serial Number does not match. Check your configuration file.")
         else:
-            if self.log_level <= 40: print("Unknown response error code. Error frame: %s", error_frame.hex())
+            if self.log_level <= 40: print("ERROR: Unknown response error code. Error frame: %s", error_frame.hex())
 
