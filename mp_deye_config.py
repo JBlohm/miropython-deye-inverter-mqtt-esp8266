@@ -38,7 +38,7 @@ DEBUG    = 10
 NOTSET   = 0
 
 LOG_LEVEL=INFO
-DEYE_DATA_READ_INTERVAL=60
+DEYE_DATA_READ_INTERVAL=60 # Do not exceed approx. 500sec, (300 = 5 Minutes is safe) else adapt MQTT keepalive im mp_deye_mqtt.py
 DEYE_METRIC_GROUPS={'micro'}
 
 class DeyeMqttConfig():

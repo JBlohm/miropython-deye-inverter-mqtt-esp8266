@@ -28,7 +28,7 @@ class DeyeMqttClient():
     def __init__(self, config: DeyeConfig):
         self.log_level = config.log_level
         # umqtt.simple.MQTTClient(client_id, server, port=0, user=None, password=None, keepalive=0, ssl=False, ssl_params={})
-        self.__mqtt_client = MQTTClient(ubinascii.hexlify(machine.unique_id()), config.mqtt.host, config.mqtt.port, config.mqtt.username, config.mqtt.password, keepalive=120)
+        self.__mqtt_client = MQTTClient(ubinascii.hexlify(machine.unique_id()), config.mqtt.host, config.mqtt.port, config.mqtt.username, config.mqtt.password, keepalive=600)
         self.__mqtt_client.connect()
         self.__config = config.mqtt
 
