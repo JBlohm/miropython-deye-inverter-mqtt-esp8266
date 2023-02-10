@@ -15,11 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
-#import logging
-
 from umqtt.simple import MQTTClient
 import machine
 import ubinascii
+import gc
 
 from mp_deye_config import DeyeConfig
 from mp_deye_observation import Observation
@@ -27,7 +26,6 @@ from mp_deye_observation import Observation
 class DeyeMqttClient():
 
     def __init__(self, config: DeyeConfig):
-        #self.__log = logging.getLogger(DeyeMqttClient.__name__)
         self.log_level = config.log_level
         # umqtt.simple.MQTTClient(client_id, server, port=0, user=None, password=None, keepalive=0, ssl=False, ssl_params={})
         self.__mqtt_client = MQTTClient(ubinascii.hexlify(machine.unique_id()), config.mqtt.host, config.mqtt.port, config.mqtt.username, config.mqtt.password, keepalive=120)
@@ -54,3 +52,12 @@ class DeyeMqttClient():
                     self.__do_publish(observation)
         except:
             if self.log_level <= 40: print(f"ERROR: MQTT connection error")
+
+    def publish_os_mem_free(self):
+        try:
+            mqtt_topic = f'{self.__config.topic_prefix}/{"esp_mem_free"}'
+            info = self.__mqtt_client.publish(mqtt_topic, str(gc.mem_free()))
+            if self.log_level <= 10: print("INFO: Memory free: ", value)
+        except:
+            if self.log_level <= 40: print(f"ERROR: MQTT publishing error mem_free")
+

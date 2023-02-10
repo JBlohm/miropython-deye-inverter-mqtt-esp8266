@@ -59,6 +59,7 @@ class DeyeDaemon():
                     if self.log_level <= 10: print(f"DEBUG: {observation.sensor.name}: {observation.value_as_str()}")
 
             self.mqtt_client.publish_observations(observations)
+            self.mqtt_client.publish_os_mem_free()
             gc.collect()
             if self.log_level <= 20: print(f"INFO: Reading completed")
 
@@ -81,7 +82,6 @@ def main():
     ap_if.active(False)
     
     config = DeyeConfig.from_env()
-    daemon = DeyeDaemon(config)
     
     # Activate WLAN Connection
     station = network.WLAN(network.STA_IF)
@@ -93,6 +93,8 @@ def main():
     
     if config.log_level <= 20: print(f"INFO: WLAN Connection successful")
     
+    daemon = DeyeDaemon(config)
+
     while True:
         daemon.do_task()
         gc.collect()

@@ -34,7 +34,7 @@ class DeyeConnector:
                 client_socket.settimeout(10)
                 client_socket.connect(sockadress)
             except: 
-                if self.log_level <= 30: print("WARN: Could not open socket on IP %s", self.config.ip_address)
+                if self.log_level <= 30: print("WARN: Could not open socket on IP ", self.config.ip_address)
                 client_socket.close()
                 return
 
