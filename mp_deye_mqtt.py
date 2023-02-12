@@ -53,6 +53,22 @@ class DeyeMqttClient():
         except:
             if self.log_level <= 40: print("ERROR: MQTT connection error")
 
+    def publish_os_resetcause(self):
+        try:
+            mqtt_topic = f'{self.__config.topic_prefix}/{"esp_os_resetcause"}'
+            MyResetCause = machine.reset_cause()
+            resetstr = "Unknown - "+str(MyResetCause)
+            if ( MyResetCause == machine.PWRON_RESET ): resetstr = "PWRON_RESET"
+            if ( MyResetCause == machine.HARD_RESET ): resetstr = "HARD_RESET"
+            if ( MyResetCause == machine.WDT_RESET ): resetstr = "WDT_RESET"
+            if ( MyResetCause == machine.DEEPSLEEP_RESET ): resetstr = "DEEPSLEEP_RESET"
+            if ( MyResetCause == machine.SOFT_RESET ): resetstr = "SOFT_RESET"
+
+            info = self.__mqtt_client.publish(mqtt_topic, resetstr)
+            if self.log_level <= 10: print("INFO: OS reset cause: ", resetstr)
+        except:
+            if self.log_level <= 40: print("ERROR: MQTT publishing error resetcause")
+
     def publish_os_mem_free(self):
         try:
             mqtt_topic = f'{self.__config.topic_prefix}/{"esp_mem_free"}'

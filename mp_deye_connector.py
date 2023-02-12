@@ -17,6 +17,7 @@
 
 import socket
 import ubinascii
+from machine import WDT
 
 from mp_deye_config import DeyeConfig
 
@@ -24,11 +25,14 @@ class DeyeConnector:
 
     def __init__(self, config: DeyeConfig):
         self.log_level = config.log_level
+        self.wdt_enable = config.wdt_enable
         self.config = config.logger
 
     def send_request(self, req_frame):
         for res in socket.getaddrinfo(self.config.ip_address, self.config.port, socket.AF_INET, socket.SOCK_STREAM):
             family, socktype, proto, canonname, sockadress = res
+            if self.wdt_enable: wdt = WDT()
+            if self.wdt_enable: wdt.feed()
             try:
                 client_socket = socket.socket(family, socktype, proto)
                 client_socket.settimeout(10)
@@ -43,6 +47,7 @@ class DeyeConnector:
 
             attempts = 5
             while (attempts > 0):
+                if self.wdt_enable: wdt.feed()
                 attempts = attempts - 1
                 try:
                     data = client_socket.recv(1024)

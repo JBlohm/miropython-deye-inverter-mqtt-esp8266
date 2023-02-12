@@ -21,7 +21,7 @@ DEYE_LOGGER_IP_ADDRESS='192.168.2.156'
 DEYE_LOGGER_PORT=8899
 DEYE_LOGGER_SERIAL_NUMBER=4175806782
 
-MQTT_HOST='raspberrypi.fritz.box'
+MQTT_HOST='your-mqtt-server'
 MQTT_PORT=1883
 MQTT_USERNAME='user'
 MQTT_PASSWORD='password'
@@ -29,6 +29,8 @@ MQTT_TOPIC_PREFIX='deye'
 
 WIFI_SSID = 'your-ssid'
 WIFI_PASSWORD = 'your-password'
+
+WDT_ENABLE=False
 
 CRITICAL = 50
 ERROR    = 40
@@ -87,6 +89,7 @@ class DeyeConfig():
                  log_level=INFO,
                  wifi_ssid='',
                  wifi_pwd='',
+                 wdt_enable=False,
                  data_read_inverval=60,
                  metric_groups=[]):
         self.logger = logger_config
@@ -94,6 +97,7 @@ class DeyeConfig():
         self.log_level = log_level
         self.wifi_ssid=WIFI_SSID
         self.wifi_pwd=WIFI_PASSWORD
+        self.wdt_enable=WDT_ENABLE
         self.data_read_inverval = data_read_inverval
         self.metric_groups = metric_groups
 

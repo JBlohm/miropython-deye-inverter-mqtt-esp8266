@@ -19,6 +19,7 @@ import sys
 import time
 import network
 import gc
+from machine import WDT
 
 from mp_deye_config import DeyeConfig
 from mp_deye_connector import DeyeConnector
@@ -33,6 +34,7 @@ class DeyeDaemon():
     def __init__(self, config: DeyeConfig):
         self.__config = config
         self.log_level = config.log_level
+        self.wdt_enable = config.wdt_enable
         self.mqtt_client = DeyeMqttClient(config)
         connector = DeyeConnector(config)
         self.modbus = DeyeModbus(config, connector)
@@ -40,13 +42,18 @@ class DeyeDaemon():
 
     def do_task(self):
         if self.log_level <= 20: print("INFO: Reading start")
+        if self.wdt_enable: wdt = WDT()
+        if self.wdt_enable: wdt.feed()
         try:
             
             regs = self.modbus.read_registers(0x3c, 0x4f)
+            if self.wdt_enable: wdt.feed()
             gc.collect()
             regs.update(self.modbus.read_registers(0x50, 0x5f))
+            if self.wdt_enable: wdt.feed()
             gc.collect()
             regs.update(self.modbus.read_registers(0x6d, 0x74))
+            if self.wdt_enable: wdt.feed()
             gc.collect()
 
             timestamp = time.localtime()
@@ -60,6 +67,8 @@ class DeyeDaemon():
 
             self.mqtt_client.publish_observations(observations)
             self.mqtt_client.publish_os_mem_free()
+            self.mqtt_client.publish_os_resetcause()
+            if self.wdt_enable: wdt.feed()
             gc.collect()
             if self.log_level <= 20: print("INFO: Reading completed")
 
@@ -83,23 +92,34 @@ def main():
     
     config = DeyeConfig.from_env()
     
+    if config.wdt_enable: wdt = WDT()
+
     # Activate WLAN Connection
+    if config.log_level <= 20: print("INFO: Connecting to Wifi")
     station = network.WLAN(network.STA_IF)
     station.active(True)
     station.connect(config.wifi_ssid, config.wifi_pwd)
 
     while station.isconnected() == False:
-      pass
+        if config.log_level <= 20: print(".", end=" ")
+        if config.wdt_enable: wdt.feed()
+        time.sleep(1)
+        pass
     
-    if config.log_level <= 20: print("INFO: WLAN Connection successful")
+    if config.log_level <= 20: print("INFO: Wifi Connection successful")
     
     daemon = DeyeDaemon(config)
 
     while True:
+        if config.wdt_enable: wdt.feed()
         daemon.do_task()
         gc.collect()
-        if config.log_level <= 20: print("INFO: Memory: ", os_mem_free())
-        time.sleep(config.data_read_inverval)
+        if config.log_level <= 20: print("INFO: Memory:", os_mem_free())
+        count = config.data_read_inverval
+        while (count):
+            if config.wdt_enable: wdt.feed()
+            count -= 1
+            time.sleep(1)
 
 
 if __name__ == "__main__":
