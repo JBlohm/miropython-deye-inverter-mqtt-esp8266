@@ -32,10 +32,10 @@ class DeyeConnector:
         for res in socket.getaddrinfo(self.config.ip_address, self.config.port, socket.AF_INET, socket.SOCK_STREAM):
             family, socktype, proto, canonname, sockadress = res
             if self.wdt_enable: wdt = WDT()
-            if self.wdt_enable: wdt.feed()
             try:
                 client_socket = socket.socket(family, socktype, proto)
                 client_socket.settimeout(10)
+                if self.wdt_enable: wdt.feed()
                 client_socket.connect(sockadress)
             except: 
                 if self.log_level <= 30: print("WARN: Could not open socket on IP ", self.config.ip_address)
@@ -43,6 +43,7 @@ class DeyeConnector:
                 return
 
             if self.log_level <= 10: print("DEBUG: Request frame: ", ubinascii.hexlify(req_frame))
+            if self.wdt_enable: wdt.feed()
             client_socket.sendall(req_frame)
 
             attempts = 5
@@ -56,11 +57,13 @@ class DeyeConnector:
                     except:
                         if self.log_level <= 30: print("WARN: No data received")
                     if self.log_level <= 10: print("DEBUG: Response frame: ", ubinascii.hexlify(data))
+                    if self.wdt_enable: wdt.feed()
                     client_socket.close()
                     return data
                 except:
                     if self.log_level <= 30: print("WARN: Connection timeout/error (send_request)")
 
+        if self.wdt_enable: wdt.feed()
         client_socket.close()
         
         return bytearray()

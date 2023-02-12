@@ -46,7 +46,10 @@ class DeyeDaemon():
         if self.wdt_enable: wdt.feed()
         try:
             
-            regs = self.modbus.read_registers(0x3c, 0x4f)
+            regs = self.modbus.read_registers(0x3c, 0x3f)
+            if self.wdt_enable: wdt.feed()
+            gc.collect()
+            regs.update(self.modbus.read_registers(0x40, 0x4f))
             if self.wdt_enable: wdt.feed()
             gc.collect()
             regs.update(self.modbus.read_registers(0x50, 0x5f))
@@ -63,7 +66,7 @@ class DeyeDaemon():
                 if value is not None:
                     observation = Observation(sensor, timestamp, value)
                     observations.append(observation)
-                    if self.log_level <= 10: print(f"DEBUG: {observation.sensor.name}: {observation.value_as_str()}")
+                    if self.log_level <= 10: print(f"DEBUG: Observation {observation.sensor.name}: {observation.value_as_str()}")
 
             self.mqtt_client.publish_observations(observations)
             self.mqtt_client.publish_os_mem_free()
@@ -114,7 +117,7 @@ def main():
         if config.wdt_enable: wdt.feed()
         daemon.do_task()
         gc.collect()
-        if config.log_level <= 20: print("INFO: Memory:", os_mem_free())
+        if config.log_level <= 20: print("INFO: main() Loop memory:", os_mem_free())
         count = config.data_read_inverval
         while (count):
             if config.wdt_enable: wdt.feed()
