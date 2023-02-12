@@ -38,7 +38,7 @@ class DeyeConnector:
                 client_socket.close()
                 return
 
-            if self.log_level <= 10: print(f"DEBUG: Request frame: ", ubinascii.hexlify(req_frame))
+            if self.log_level <= 10: print("DEBUG: Request frame: ", ubinascii.hexlify(req_frame))
             client_socket.sendall(req_frame)
 
             attempts = 5
@@ -49,12 +49,12 @@ class DeyeConnector:
                     try:
                         data
                     except:
-                        if self.log_level <= 30: print(f"WARN: No data received")
-                    if self.log_level <= 10: print(f"DEBUG: Response frame: ", ubinascii.hexlify(data))
+                        if self.log_level <= 30: print("WARN: No data received")
+                    if self.log_level <= 10: print("DEBUG: Response frame: ", ubinascii.hexlify(data))
                     client_socket.close()
                     return data
                 except:
-                    if self.log_level <= 30: print(f"WARN: Connection timeout/error (send_request)")
+                    if self.log_level <= 30: print("WARN: Connection timeout/error (send_request)")
 
         client_socket.close()
         

@@ -39,7 +39,7 @@ class DeyeDaemon():
         self.sensors = [s for s in sensor_list if s.in_any_group(self.__config.metric_groups)]
 
     def do_task(self):
-        if self.log_level <= 20: print(f"INFO: Reading start")
+        if self.log_level <= 20: print("INFO: Reading start")
         try:
             
             regs = self.modbus.read_registers(0x3c, 0x4f)
@@ -61,10 +61,10 @@ class DeyeDaemon():
             self.mqtt_client.publish_observations(observations)
             self.mqtt_client.publish_os_mem_free()
             gc.collect()
-            if self.log_level <= 20: print(f"INFO: Reading completed")
+            if self.log_level <= 20: print("INFO: Reading completed")
 
         except:
-            if self.log_level <= 30: print(f"WARN: Cannot read from Inverter (do_task)")
+            if self.log_level <= 30: print("WARN: Cannot read from Inverter (do_task)")
             
 
 def os_mem_free():
@@ -91,14 +91,14 @@ def main():
     while station.isconnected() == False:
       pass
     
-    if config.log_level <= 20: print(f"INFO: WLAN Connection successful")
+    if config.log_level <= 20: print("INFO: WLAN Connection successful")
     
     daemon = DeyeDaemon(config)
 
     while True:
         daemon.do_task()
         gc.collect()
-        if config.log_level <= 20: print(f"INFO: Memory: ", os_mem_free())
+        if config.log_level <= 20: print("INFO: Memory: ", os_mem_free())
         time.sleep(config.data_read_inverval)
 
 

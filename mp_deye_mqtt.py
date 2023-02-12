@@ -40,7 +40,7 @@ class DeyeMqttClient():
                 if self.log_level <= 10: print("DEBUG: Publishing message. topic: '%s', value: '%s'", mqtt_topic, value)
                 info = self.__mqtt_client.publish(mqtt_topic, value)
         except:
-            if self.log_level <= 40: print(f"ERROR: MQTT publishing error")
+            if self.log_level <= 40: print("ERROR: MQTT publishing error")
 
     def publish_observation(self, observation: Observation):
         self.publish_observations([observation])
@@ -51,7 +51,7 @@ class DeyeMqttClient():
                 if observation.sensor.mqtt_topic_suffix:
                     self.__do_publish(observation)
         except:
-            if self.log_level <= 40: print(f"ERROR: MQTT connection error")
+            if self.log_level <= 40: print("ERROR: MQTT connection error")
 
     def publish_os_mem_free(self):
         try:
@@ -59,5 +59,5 @@ class DeyeMqttClient():
             info = self.__mqtt_client.publish(mqtt_topic, str(gc.mem_free()))
             if self.log_level <= 10: print("INFO: Memory free: ", value)
         except:
-            if self.log_level <= 40: print(f"ERROR: MQTT publishing error mem_free")
+            if self.log_level <= 40: print("ERROR: MQTT publishing error mem_free")
 
