@@ -94,6 +94,8 @@ WLAN is controlled directly within mp_deye_daemon.py and mp_deye_cli.py
 * `MQTT_TOPIC_PREFIX` - mqtt topic prefix used for all inverter metrics
 * `WIFI_SSID`
 * `WIFI_PASSWORD`
+* `WDT_ENABLE` - False (default) 
+    * `Enabeling` (True) might cause problems when answering times of the inverter are >=3 sec.
 
 ## Reading and writing raw register values
 The tool allows reading and writing raw register values directly in the terminal.
