@@ -17,7 +17,6 @@
 import network
 import esp
 
-import logging
 import sys
 
 from mp_deye_config import DeyeConfig
@@ -42,7 +41,7 @@ class DeyeCli():
         reg_address = int(args[0])
         registers = self.__modbus.read_registers(reg_address, reg_address)
         if registers is None:
-            print("Error: no registers read")
+            print(f"Error: no registers read")
             sys.exit(1)
         if reg_address not in registers:
             print(f"Error: register {reg_address} not read")
@@ -55,39 +54,35 @@ class DeyeCli():
 
     def write_register(self, args):
         if len(args) < 2:
-            print("Not enough arguments")
+            print(f"Not enough arguments")
             sys.exit(1)
         reg_address = int(args[0])
         reg_value = int(args[1])
         if self.__modbus.write_register(reg_address, reg_value):
-            print("Ok")
+            print(f"Ok")
         else:
-            print("Error")
+            print(f"Error")
 
 
 def main():
     
-    ssid = 'your_wlan_ssid'
-    password = 'your_wlan_password'
-    
-    # Activate WLAN Connection
-    station = network.WLAN(network.STA_IF)
-    station.active(True)
-    station.connect(ssid, password)
-
-    while station.isconnected() == False:
-      pass
-
-    print('WLAN Connection successful')
-
     # Disable AP_IF (which is active per default)
     ap_if = network.WLAN(network.AP_IF)
     ap_if.active(False)
     
     config = DeyeConfig.from_env()
+    
+    # Activate WLAN Connection
+    station = network.WLAN(network.STA_IF)
+    station.active(True)
+    station.connect(config.wifi_ssid, config.wifi_pwd)
+
+    while station.isconnected() == False:
+      pass
+    
+    print(f"WLAN Connection successful")
     cli = DeyeCli(config)
-    args=['r', '86']		# Output active power 0x56=86(dec): unit: 0.1W
-    #args = sys.argv[1:]
+    args=['r', '86']  # Output active power 0x56=86(dec): unit: 0.1W
     cli.exec_command(args)
 
     station.disconnect()

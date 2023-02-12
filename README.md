@@ -71,7 +71,7 @@ Additional groups may be added in the future.
 ## Installation
 1. Adapt mp_deye_config.py to your needs
 2. Copy all files except main.py to ESP8266 chip filesystem
-3. Run mp_deye_daemon.py or mp_deye_cli.py in Thonny. If that works, goto next step.
+3. Run mp_deye_daemon.py or mp_deye_cli.py in Thonny. Play with mp_deye_cli_deviceinfo.py. If that works, goto next step.
 4. Copy the main.py file to the ESP8266 chip filesystem
 5. Reboot ESP8266
 
