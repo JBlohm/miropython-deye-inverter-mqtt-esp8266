@@ -86,7 +86,11 @@ def os_mem_free():
     m_pct = '{0:.2f}%'.format(m_free/m_total*100)
     return ('Total:{0} Free:{1} ({2})'.format(m_total,m_free,m_pct))
   
-
+def restart_and_reconnect():
+    print('Failed to connect to MQTT broker. Reconnecting...')
+    time.sleep(10)
+    machine.reset()
+  
 def main():
 
     # Disable AP_IF (which is active per default)
@@ -113,7 +117,7 @@ def main():
     
     daemon = DeyeDaemon(config)
 
-    while True:
+    while station.isconnected() == True:
         if config.wdt_enable: wdt.feed()
         daemon.do_task()
         gc.collect()
@@ -124,6 +128,8 @@ def main():
             count -= 1
             time.sleep(1)
 
+    
+    restart_and_reconnect()  # If connection gets lost
 
 if __name__ == "__main__":
     main()
