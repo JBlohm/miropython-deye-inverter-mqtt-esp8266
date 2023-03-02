@@ -19,6 +19,7 @@ import sys
 import time
 import network
 import gc
+import machine
 from machine import WDT
 
 from mp_deye_config import DeyeConfig

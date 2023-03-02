@@ -19,6 +19,7 @@ from umqtt.simple import MQTTClient
 import machine
 import ubinascii
 import gc
+import time
 
 from mp_deye_config import DeyeConfig
 from mp_deye_observation import Observation
@@ -29,8 +30,14 @@ class DeyeMqttClient():
         self.log_level = config.log_level
         self.wdt_enable = config.wdt_enable
         # umqtt.simple.MQTTClient(client_id, server, port=0, user=None, password=None, keepalive=0, ssl=False, ssl_params={})
-        self.__mqtt_client = MQTTClient(ubinascii.hexlify(machine.unique_id()), config.mqtt.host, config.mqtt.port, config.mqtt.username, config.mqtt.password, keepalive=600)
-        self.__mqtt_client.connect()
+        self.__mqtt_client = MQTTClient(ubinascii.hexlify(machine.unique_id()), config.mqtt.host, config.mqtt.port, config.mqtt.username, config.mqtt.password)
+        try:
+            self.__mqtt_client.connect()
+        except:
+            if self.log_level <= 40: print("ERROR: MQTT connect error")
+            time.sleep(10)
+            machine.reset()
+            
         self.__config = config.mqtt
 
     def __do_publish(self, observation: Observation):
