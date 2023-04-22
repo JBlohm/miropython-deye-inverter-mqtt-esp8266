@@ -46,13 +46,13 @@ Additional groups may be added in the future.
 |AC Phase 1 power|computed|`ac/l1_power`|W|string, micro|
 |AC Phase 2 power|computed|`ac/l2_power`|W|string|
 |AC Phase 3 power|computed|`ac/l3_power`|W|string|
-|AC Frequency|0x4f|`ac_freq`|Hz||
+|AC Frequency|0x4f|`ac/ac_freq`|Hz||
 |Operating power|0x50|`operating_power`|W|string, micro|
-|DC total power|0x52|`dc_total_power`|W|string|
-|DC total power|computed|`dc_total_power`|W|micro|
-|AC apparent power|0x54|`ac_apparent_power`|W|string|
-|AC active power|0x56 - 0x57|`ac_active_power`|W|string, micro|
-|AC reactive power|0x58|`ac_reactive_power`|W|string|
+|DC total power|0x52|`dc/dc_total_power`|W|string|
+|DC total power|computed|`dc/dc_total_power`|W|micro|
+|AC apparent power|0x54|`ac/ac_apparent_power`|W|string|
+|AC active power|0x56 - 0x57|`ac/ac_active_power`|W|string, micro|
+|AC reactive power|0x58|`ac/ac_reactive_power`|W|string|
 |Radiator temperature|0x5a|`radiator_temp`|C|string, micro|
 |IGBT temperature|0x5b|`igbt_temp`|C|string|
 |DC PV1 voltage|0x6d|`dc/pv1_voltage`|V||

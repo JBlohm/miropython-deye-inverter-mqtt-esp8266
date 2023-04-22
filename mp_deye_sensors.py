@@ -43,7 +43,7 @@ phase3_power_sensor = ComputedPowerSensor("Phase3 Power", phase3_voltage_sensor,
                                           phase3_current_sensor, mqtt_topic_suffix='ac/l3_power', groups={'string'})
 
 # AC Freq
-ac_freq_sensor = SingleRegisterSensor("AC Freq", 0x4f, 0.01, mqtt_topic_suffix='ac_freq')
+ac_freq_sensor = SingleRegisterSensor("AC Freq", 0x4f, 0.01, mqtt_topic_suffix='ac/ac_freq')
 
 # Production today
 production_today_sensor = SingleRegisterSensor("Production today", 0x3c, 0.1, mqtt_topic_suffix='day_energy')
@@ -93,16 +93,16 @@ pv4_total_sensor = DoubleRegisterSensor(
 operating_power_sensor = SingleRegisterSensor(
     "Operating Power", 0x50, 0.1, mqtt_topic_suffix='operating_power', groups={'string', 'micro'})
 string_dc_power_sensor = SingleRegisterSensor(
-    "DC Total Power", 0x52, 0.1, mqtt_topic_suffix='dc_total_power', groups={'string'})
+    "DC Total Power", 0x52, 0.1, mqtt_topic_suffix='dc/dc_total_power', groups={'string'})
 micro_dc_power_sensor = ComputedSumSensor(
     "DC Total Power", {pv1_power_sensor, pv2_power_sensor, pv3_power_sensor, pv4_power_sensor},
-    mqtt_topic_suffix='dc_total_power', groups={'micro'})
+    mqtt_topic_suffix='dc/dc_total_power', groups={'micro'})
 ac_apparent_power_sensor = SingleRegisterSensor(
-    "AC Apparent Power", 0x54, 0.1, mqtt_topic_suffix='ac_apparent_power', groups={'string'})
+    "AC Apparent Power", 0x54, 0.1, mqtt_topic_suffix='ac/ac_apparent_power', groups={'string'})
 ac_active_power_sensor = DoubleRegisterSensor(
-    "AC Active Power", 0x56, 0.1, mqtt_topic_suffix='ac_active_power', groups={'string', 'micro'})
+    "AC Active Power", 0x56, 0.1, mqtt_topic_suffix='ac/ac_active_power', groups={'string', 'micro'})
 ac_reactive_power_sensor = SingleRegisterSensor(
-    "AC Reactive Power", 0x58, 0.1, mqtt_topic_suffix='ac_reactive_power', groups={'string'})
+    "AC Reactive Power", 0x58, 0.1, mqtt_topic_suffix='ac/ac_reactive_power', groups={'string'})
 production_total_sensor = DoubleRegisterSensor(
     "Production Total", 0x3f, 0.1, mqtt_topic_suffix='total_energy', groups={'string', 'micro'})
 
