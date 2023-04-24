@@ -1,7 +1,7 @@
 # Deye solar inverter MQTT bridge on ESP8266 D1-mini platform (with Micropython) in use w. Home Assistant
 
 Reads Deye solar inverter metrics using Modbus over TCP and publishes them over MQTT.
-This is the code version was ported by Joern Blohm for use with: MicroPython v1.19.1 on 2022-06-17; ESP module with ESP8266
+This code version was ported by Joern Blohm for use with: MicroPython v1.19.1 on 2022-06-17; ESP module with ESP8266
 
 Original code by Krzysztof Białek https://github.com/kbialek/deye-inverter-mqtt
 
