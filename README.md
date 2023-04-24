@@ -10,8 +10,8 @@ Original code tested with:
 * [Deye SUN1300G3](https://www.deyeinverter.com/product/microinverter-1/sun13002000g3eu230.html) and Logger S/N 41xxxxxxxx
 * [Deye SUN600G3](https://www.deyeinverter.com/product/microinverter-1/sun600-800-1000g3eu230-single-phase-4-mppt-microinverter-rapid-shutdown.html) and Logger S/N 41xxxxxxxx
 
-This Code tested with Deye SUN600G3-EU-230 Microinverter (Firmware: MW3_16U_5406_1.53)
-and MQTT service (FHEM w. builtin MQTT Server)
+This Code tested with Deye SUN600G3-EU-230 Microinverter (Firmware: MW3_16U_5406_1.57)
+and MQTT service (FHEM w. builtin MQTT Server & Home Assistant w. core-mosquitto)
 
 ## Supported metrics
 The meaning of certain registers depends on the inverter type. 
