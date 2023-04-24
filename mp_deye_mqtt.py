@@ -29,13 +29,15 @@ class DeyeMqttClient():
     def __init__(self, config: DeyeConfig):
         self.log_level = config.log_level
         self.wdt_enable = config.wdt_enable
-        # umqtt.simple.MQTTClient(client_id, server, port=0, user=None, password=None, keepalive=0, ssl=False, ssl_params={})
-        self.__mqtt_client = MQTTClient(ubinascii.hexlify(machine.unique_id()), config.mqtt.host, config.mqtt.port, config.mqtt.username, config.mqtt.password)
+        
+        # Call format: MQTTClient(client_id, server, port=0, user=None, password=None, keepalive=0, ssl=False, ssl_params={})        
+        self.__mqtt_client = MQTTClient(ubinascii.hexlify(machine.unique_id()), config.mqtt.host, config.mqtt.port, config.mqtt.username, config.mqtt.password, keepalive=300)
+
         try:
             self.__mqtt_client.connect()
         except:
             if self.log_level <= 40: print("ERROR: MQTT connect error")
-            time.sleep(10)
+            time.sleep(2)
             machine.reset()
             
         self.__config = config.mqtt

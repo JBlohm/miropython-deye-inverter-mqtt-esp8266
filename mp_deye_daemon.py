@@ -88,7 +88,7 @@ def os_mem_free():
     return ('Total:{0} Free:{1} ({2})'.format(m_total,m_free,m_pct))
   
 def restart_and_reconnect():
-    print('Failed to connect to MQTT broker. Reconnecting...')
+    print('Fatal Error: Restart and reconnect')
     time.sleep(10)
     machine.reset()
   
@@ -129,7 +129,8 @@ def main():
             count -= 1
             time.sleep(1)
 
-    
+
+    station.disconnect()
     restart_and_reconnect()  # If connection gets lost
 
 if __name__ == "__main__":
